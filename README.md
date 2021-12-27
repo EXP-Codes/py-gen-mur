@@ -1,6 +1,7 @@
-# pypi-template
+# py-gen-mur
 
-> pypi 开发模板
+> python 机器码/用户码/注册码 生成器
+<br/> python generate [m]achine_code [u]ser_code [r]egister_code
 
 ------
 
