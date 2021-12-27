@@ -24,3 +24,10 @@ log/
 
 # cache
 tests/db/mysql/data
+
+
+# cache
+.machine
+.user
+.register
+

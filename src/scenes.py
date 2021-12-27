@@ -2,80 +2,94 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------
 
+import os
 import random
 import string
-from ._register import Register
+from ._crypt import Crypt
+from ._mi import MachineInfo
+
+MACHINE_CODE_PATH = './.machine'
+USER_CODE_PATH = './.user'
+REGISTER_CODE_PATH = './.register'
+
+CRYPT = Crypt()
+MI = MachineInfo()
 
 
-def gen_machine_code() :
+def gen_machine_code(crypt=CRYPT, to_file=True) :
     '''
     用户场景： 生成机器码
     '''
-    reg = Register()
-    duuid = reg.get_disk_uuid()
-    machine_code = reg.encrypt_des(duuid)
+    uuid = MI.generate()
+    machine_code = crypt.encrypt_des(uuid)
+    if to_file :
+        _save(machine_code, MACHINE_CODE_PATH)
     return machine_code
 
 
-def gen_user_code(bit=8) :
+def gen_user_code(bit=8, to_file=True) :
     '''
     管理员场景： 分配随机用户码（盐）
     '''
-    str_range = string.ascii_letters + string.digits
-    user_code = ''.join(random.sample(str_range, bit))
+    str_range = "%s%s" % (
+        string.ascii_letters, 
+        string.digits
+    )
+    user_code = ''.join(
+        random.sample(str_range, bit)
+    )
+    if to_file :
+        _save(user_code, USER_CODE_PATH)
     return user_code
 
 
-def gen_register_code(machine_code, user_code) :
+def gen_register_code(machine_code, user_code, crypt=CRYPT, to_file=True) :
     '''
     管理员场景： 混合机器码与用户码，生成注册码
     '''
-    reg = Register()
     try :
-        duuid = reg.decrypt_des(machine_code)
-        rc = _gen_rc(reg, duuid, user_code)
+        uuid = crypt.decrypt_des(machine_code)
+        register_code = _gen_rc(crypt, uuid, user_code)
     except :
-        rc = ''
-    return rc
+        register_code = ''
+    if to_file :
+        _save(register_code, REGISTER_CODE_PATH)
+    return register_code
 
 
-def _gen_rc(reg, duuid, user_code) :
-    return reg.encrypt_des("%s##%s" % (user_code, duuid))
-
-
-
-def verify_authorization(user_code) :
+def verify_authorization(user_code, crypt=CRYPT) :
     '''
     用户场景： 每次运行程序时，输入用户码； 校验【机器码+用户码=注册码】
     '''
-    reg = Register()
-    duuid = reg.get_disk_uuid()
-    rc = _gen_rc(reg, duuid, user_code)
-    return rc == read_register_code()
+    uuid = MI.generate()
+    register_code = _gen_rc(crypt, uuid, user_code)
+    return register_code == _read(REGISTER_CODE_PATH)
 
 
-def save_machine_code(machine_code) :
-    '''
-    用户场景： 保存机器码到本地
-    '''
-    pass
-    # TODO 文件本身加密？
+def _gen_rc(crypt, uuid, user_code) :
+    return crypt.to_md5(
+        crypt.encrypt_des(
+            "%s##%s" % (user_code, uuid)
+        )
+    )
 
 
-def save_register_code(register_code) :
+def _save(code, filepath) :
     '''
-    用户场景： 保存注册码到本地
+    保存
     '''
-    pass
-    # TODO 文件本身加密？
+    with open(filepath, 'w+') as file :
+        file.write(code)
 
 
-def read_register_code() :
+def _read(filepath) :
     '''
-    用户场景： 读取本地注册码
+    读取
     '''
-    register_code = ''
-    # TODO
-    return register_code
+    code = ''
+    if os.path.exists(filepath) :
+        with open(filepath, 'r') as file :
+            code = file.read()
+    return code
 
 

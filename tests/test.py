@@ -15,7 +15,7 @@ import unittest
 from src.scenes import *
 
 
-class TestPypdmSqlite(unittest.TestCase):
+class TestScenes(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) :
@@ -28,21 +28,68 @@ class TestPypdmSqlite(unittest.TestCase):
 
 
     def setUp(self) :
-        self.REG = Register()
-        self.DUUID = self.REG.get_disk_uuid()
+        self.CRYPT = Crypt()
+        self.MI = MachineInfo()
+        self.UUID = self.MI.generate()
+        self.BIT = 16
 
 
     def tearDown(self) :
         pass
 
 
+    def test_des(self) :
+        print(self.UUID)
+        ciphertext = self.CRYPT.encrypt_des(self.UUID)
+        print(ciphertext)
+        plaintext = self.CRYPT.decrypt_des(ciphertext)
+        print(plaintext)
+        self.assertEqual(
+            plaintext, 
+            self.UUID
+        )
+
+
     def test_gen_machine_code(self) :
         machine_code = gen_machine_code()
         print(machine_code)
         self.assertEqual(
-            self.REG.encrypt_des(self.DUUID), 
+            self.CRYPT.encrypt_des(self.UUID), 
             machine_code
         )
+
+
+    def test_gen_user_code(self) :
+        user_code = gen_user_code(self.BIT)
+        print(user_code)
+        self.assertEqual(
+            len(user_code), 
+            self.BIT
+        )
+    
+
+    def test_gen_register_code(self) :
+        machine_code = gen_machine_code()
+        print(machine_code)
+        user_code = gen_user_code()
+        print(user_code)
+        register_code = gen_register_code(machine_code, user_code)
+        print(register_code)
+        self.assertRegex(
+            register_code, 
+            r"[0-9A-Z]{32,32}"
+        )
+
+
+    def test_verify_authorization(self) :
+        machine_code = gen_machine_code()
+        user_code = "U32zH48k"
+        register_code = gen_register_code(machine_code, user_code)
+
+        verify_authorization
+
+
+
 
 
 
