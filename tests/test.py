@@ -31,7 +31,6 @@ class TestScenes(unittest.TestCase):
         self.CRYPT = Crypt()
         self.MI = MachineInfo()
         self.UUID = self.MI.generate()
-        self.BIT = 16
 
 
     def tearDown(self) :
@@ -60,11 +59,12 @@ class TestScenes(unittest.TestCase):
 
 
     def test_gen_user_code(self) :
-        user_code = gen_user_code(self.BIT)
+        BIT = 16
+        user_code = gen_user_code(BIT)
         print(user_code)
         self.assertEqual(
             len(user_code), 
-            self.BIT
+            BIT
         )
     
 
@@ -82,11 +82,23 @@ class TestScenes(unittest.TestCase):
 
 
     def test_verify_authorization(self) :
-        machine_code = gen_machine_code()
-        user_code = "U32zH48k"
-        register_code = gen_register_code(machine_code, user_code)
+        user_code = "U32zH48k"              # 用户预先指定 或 管理员随机分配 的用户码（）
+        machine_code = gen_machine_code()   # 用户提供的机器码（这行代码在用户本地执行）
+        gen_register_code(machine_code, user_code)  # 管理员为用户生成的注册码（这行代码在管理员本地执行）
 
-        verify_authorization
+        # ...
+        # 用户把管理员提供的注册码，放到本地指定位置的文件
+        # ...
+
+        # 这行代码在用户本地执行，主要做三件事：
+        #   1. 接受用户输入的 用户码
+        #   2. 在用户本地重新生成机器码
+        #   3. 利用 用户码 和 机器码 生成 注册码
+        #   4. 比对 生成的注册码 和 用户放到本地的注册码文件内容 是否一致
+        rst = verify_authorization(user_code)
+        self.assertTrue(rst)
+
+
 
 
 
