@@ -29,7 +29,7 @@ class TestPypdmSqlite(unittest.TestCase):
 
     def setUp(self) :
         self.REG = Register()
-        self.DSN = self.REG.get_disk_serial_number()
+        self.DUUID = self.REG.get_disk_uuid()
 
 
     def tearDown(self) :
@@ -40,7 +40,7 @@ class TestPypdmSqlite(unittest.TestCase):
         machine_code = gen_machine_code()
         print(machine_code)
         self.assertEqual(
-            self.REG.encrypt_des(self.DSN), 
+            self.REG.encrypt_des(self.DUUID), 
             machine_code
         )
 

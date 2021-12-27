@@ -15,9 +15,6 @@
     4. 读文件：将十六进制转为二进制。
 '''
 
-#功能说明：用户运行程序后，自动检测认证状态，如果未经认证，就需要注册。注册过程是用户将程序运行后显示的机器码（卷序号）发回给管理员，管理员通过加密后生成加密文件或字符串给回用户。
-#每次登录，在有注册文件或者注册码的情况下，软件就会通过DES和base64解码，如果解码后和重新获取的机器码一致，则通过认证，进入主程序。
-
 import base64
 import win32api
 from pyDes import *
@@ -25,18 +22,31 @@ from pyDes import *
 class Register:
 
     def __init__(self, key=None, iv=None):
-        self.des_key = key or b"FV>0Y_:D"                           # DES Key
+        # FIXME 提供随机生成的方法
+        self.des_key = key or b"FV>0Y_:D"                           # DES 加解密 Key
         self.des_iv = iv or b"\x34\x6A\x52\xBC\x37\x2D\x36\xEF"     # 初始 IV 向量（盐）
         self.des_obj = des(self.des_key, CBC, self.des_iv, pad=None, padmode=PAD_PKCS5)
     
 
-    def get_disk_serial_number(self):
+    def get_disk_uuid(self):
         '''
-        获取硬盘序列号
+        获取硬盘唯一标识。
+        tuple = win32api.GetVolumeInformation(path)
+
+            Parameters
+                path : string
+                        The root path of the volume on which information is being requested.
+            Return Value
+                The return is a tuple of:
+                    string - Volume Name
+                    long - Volume serial number.
+                    long - Maximum Component Length of a file name.
+                    long - Sys Flags - other flags specific to the file system. See the api for details.
+                    string - File System Name
         '''
         disk_infos = win32api.GetVolumeInformation("C:\\")
         s_disk_infos = list(map(lambda e: str(e), disk_infos))
-        return ';'.join(s_disk_infos)
+        return ';'.join(s_disk_infos[1:])   # 排除最容易修改的分卷名，其他参数除非格盘或重装系统，否则难以改变
 
 
     def encrypt_des(self, plaintext):
@@ -61,7 +71,7 @@ class Register:
         #由于输入类似“12”这种不符合base64规则的字符串会引起异常，所以需要增加输入判断
         #while key
         if key:
-            content = self.get_disk_serial_number()   # number has been changed to str type after use str()
+            content = self.get_disk_uuid()   # number has been changed to str type after use str()
             key_decrypted=self.decrypt_des(key)
             if content!=0 and key_decrypted!=0:
                 if content != key_decrypted:
@@ -83,7 +93,7 @@ class Register:
         return False
 
     def check_authored(self):
-        content=self.get_disk_serial_number()
+        content=self.get_disk_uuid()
         check_authoredResult = 0
         #读写文件要加判断
         try:
@@ -125,8 +135,8 @@ if __name__ == '__main__':
     # reg.regist()
 
 
-    # 1. 用户运行 reg.encrypt_des(reg.get_disk_serial_number()) 加密的获得机器码
+    # 1. 用户运行 reg.encrypt_des(reg.get_disk_uuid()) 加密的获得机器码
     # 2. 开发者
-    # print(reg.encrypt_des(reg.get_disk_serial_number()))
+    # print(reg.encrypt_des(reg.get_disk_uuid()))
 
     reg.check_authored()
