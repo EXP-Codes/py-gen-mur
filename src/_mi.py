@@ -53,6 +53,7 @@ class MachineInfo :
 
 
     def _get_linux_disk_uuid(self):
+        # FIXME
         print("="*40, "System Information", "="*40)
         uname = platform.uname()
         print(f"System: {uname.system}")
