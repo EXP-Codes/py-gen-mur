@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 # ----------------------------------------------------------------------
 
 import unittest
+from src._crypt import *
 from src.scenes import *
 
 
@@ -38,11 +39,11 @@ class TestScenes(unittest.TestCase):
 
 
     def test_des(self) :
-        print(self.UUID)
+        print("机器唯一标识： %s" % self.UUID)
         ciphertext = self.CRYPT.encrypt_des(self.UUID)
-        print(ciphertext)
+        print("机器码（密文）： %s" % ciphertext)
         plaintext = self.CRYPT.decrypt_des(ciphertext)
-        print(plaintext)
+        print("机器码（明文）： %s" % plaintext)
         self.assertEqual(
             plaintext, 
             self.UUID
@@ -51,7 +52,7 @@ class TestScenes(unittest.TestCase):
 
     def test_gen_machine_code(self) :
         machine_code = gen_machine_code()
-        print(machine_code)
+        print("机器码： %s" % machine_code)
         self.assertEqual(
             self.CRYPT.encrypt_des(self.UUID), 
             machine_code
@@ -61,7 +62,7 @@ class TestScenes(unittest.TestCase):
     def test_gen_user_code(self) :
         BIT = 16
         user_code = gen_user_code(BIT)
-        print(user_code)
+        print("用户码： %s" % user_code)
         self.assertEqual(
             len(user_code), 
             BIT
@@ -69,12 +70,16 @@ class TestScenes(unittest.TestCase):
     
 
     def test_gen_register_code(self) :
-        machine_code = gen_machine_code()
-        print(machine_code)
+        my_key = gen_des_key()  # 注意自行生成的 key 需要保存好
+        my_iv = gen_des_iv()    # 注意自行生成的 iv 需要保存好
+        my_crypt = Crypt(key=my_key, iv=my_iv)  # 使用自己的 key 和 iv 构造加解密类，就不怕开源复用了
+
+        machine_code = gen_machine_code(my_crypt)
+        print("机器码： %s" % machine_code)
         user_code = gen_user_code()
-        print(user_code)
-        register_code = gen_register_code(machine_code, user_code)
-        print(register_code)
+        print("用户码： %s" % user_code)
+        register_code = gen_register_code(machine_code, user_code, my_crypt)
+        print("注册码： %s" % register_code)
         self.assertRegex(
             register_code, 
             r"[0-9A-Z]{32,32}"
@@ -82,7 +87,7 @@ class TestScenes(unittest.TestCase):
 
 
     def test_verify_authorization(self) :
-        user_code = "U32zH48k"              # 用户预先指定 或 管理员随机分配 的用户码（）
+        user_code = "U32zH48k"              # 用户预先指定 或 管理员随机分配 的用户码
         machine_code = gen_machine_code()   # 用户提供的机器码（这行代码在用户本地执行）
         gen_register_code(machine_code, user_code)  # 管理员为用户生成的注册码（这行代码在管理员本地执行）
 
