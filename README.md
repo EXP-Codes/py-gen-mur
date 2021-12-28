@@ -19,14 +19,14 @@
 
 ### 场景步骤一（管理员本地，可选）
 
-因代码开源，不建议使用 `crypt.Crypt()` 默认类。
+因代码开源，不建议使用 `mur.crypt.Crypt()` 默认类。
 
-建议使用此工具时，自定义指定 `crypt.Crypt()` 构造函数的 `key` 和 `iv` 。
+建议使用此工具时，自定义指定 `mur.crypt.Crypt()` 构造函数的 `key` 和 `iv` 。
 
-本代码中提供了 `crypt.gen_des_key()` 和 `crypt.gen_des_iv()` 的方法，但是生成后必须找地方另外存储这两个值，否则之前使用其生成的注册码无法再解密。
+本代码中提供了 `mur.crypt.gen_des_key()` 和 `mur.crypt.gen_des_iv()` 的方法，但是生成后必须找地方另外存储这两个值，否则之前使用其生成的注册码无法再解密。
 
 ```python
-from crypt import *
+from mur.crypt import *
 
 my_des_key = gen_des_key()
 my_des_iv = gen_des_key()
@@ -46,7 +46,7 @@ my_crypt = Crypt(
 
 
 ```python
-from user import *
+from mur.user import *
 
 u_machine_code = gen_machine_code(my_crypt)
 ```
@@ -59,7 +59,7 @@ u_machine_code = gen_machine_code(my_crypt)
 4. 把【随机用户码】文件和【注册码】文件提供给用户
 
 ```python
-from admin import *
+from mur.admin import *
 
 a_machine_code = read_machine_code()
 a_user_code = gen_user_code()
@@ -79,7 +79,7 @@ a_register_code = gen_register_code(
 6. 若一致，程序运行；否则，程序终止
 
 ```python
-from user import *
+from mur.user import *
 
 u_user_code = read_user_code()
 rst = verify_authorization(u_user_code, my_crypt)

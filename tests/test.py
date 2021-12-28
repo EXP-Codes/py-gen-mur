@@ -12,9 +12,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 # ----------------------------------------------------------------------
 
 import unittest
-from src.crypt import *
-from src.admin import *
-from src.user import *
+from src.mur.crypt import *
+from src.mur.admin import *
+from src.mur.user import *
 
 
 class TestScenes(unittest.TestCase):
