@@ -4,7 +4,7 @@
 
 import platform
 import win32api
-import psutil
+from psutil import net_if_addrs
 from datetime import datetime
 
 
@@ -17,7 +17,8 @@ class MachineInfo :
     def generate(self) :
         mc = '\n'.join([
             self._get_disk_uuid(), 
-            # TODO 
+            self._get_net_uuid()
+            # TODO 可以添加其他机器标识
         ])
         return mc
 
@@ -54,9 +55,38 @@ class MachineInfo :
 
 
     def _get_linux_disk_uuid(self):
-        # TODO
+        # TODO 因权限问题、或受限于系统组件，尚未有较好方法获取硬盘唯一标识
         return ''
+
+
+    def _get_net_uuid(self):
+        uuid = ''
+        if self._is_windows() :
+            uuid = self._get_win_net_uuid()
+
+        else :
+            uuid = self._get_linux_net_uuid()
+        return uuid
+
     
+    def _get_win_net_uuid(self):
+        # FIXME win 网卡比较容易改变（例如安装虚拟机等都会新增网卡），暂不纳入标识
+        return ''
+
+
+    def _get_linux_net_uuid(self):
+        '''
+        获取网卡唯一标识（MAC 地址）
+        '''
+        macs = []
+        for k, v in net_if_addrs().items():
+            for item in v:
+                address = item[1]
+                if '-' in address and len(address) == 17:
+                    macs.append(address)
+        return ';'.join(macs)
+    
+
 
     def _os(self) :
         return platform.system()

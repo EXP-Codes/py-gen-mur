@@ -123,10 +123,6 @@ class TestScenes(unittest.TestCase):
         self.assertTrue(rst)
 
     
-    def test(self) :
-        
-
-
 
 if __name__ == '__main__':
     unittest.main()
