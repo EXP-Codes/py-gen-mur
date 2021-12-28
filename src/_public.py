@@ -6,9 +6,6 @@ import os
 from .crypt import Crypt
 from ._mi import MachineInfo
 
-# 因代码开源，不建议 Crypt 使用默认类。建议使用此工具时，自定义指定 Crypt 构造函数的 key 和 iv
-# 在 _crypt 提供了生成随机 key 和 iv 的方法
-# 但是生成后必须另外存储这两值，否则之前使用其生成的注册码无法再解密
 CRYPT = Crypt()     
 MI = MachineInfo()
 

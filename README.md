@@ -14,27 +14,80 @@
 
 ## 使用场景说明
 
+> 详见 [测试用例](./tests/test.py)
 
-### 场景一：用户运行程序，生成机器码（文件），提供给管理员，程序自动终止
 
-TODO
+### 场景步骤一（管理员本地，可选）
 
-### 场景二：管理员生成用户码（文件）
+因代码开源，不建议使用 `crypt.Crypt()` 默认类。
 
-TODO
+建议使用此工具时，自定义指定 `crypt.Crypt()` 构造函数的 `key` 和 `iv` 。
 
-### 场景三：管理员解密机器码，结合用户码，生成注册码（文件）
+本代码中提供了 `crypt.gen_des_key()` 和 `crypt.gen_des_iv()` 的方法，但是生成后必须找地方另外存储这两个值，否则之前使用其生成的注册码无法再解密。
 
-TODO
+```python
+from crypt import *
 
-### 场景四：管理员提供用户码（文件）和注册码（文件）给用户
+my_des_key = gen_des_key()
+my_des_iv = gen_des_key()
 
-TODO
+my_crypt = Crypt(
+    key = my_des_iv, 
+    iv = my_des_iv
+)
+```
 
-### 场景五：用户运行程序，校验三码正确，程序成功运行
 
-TODO
+### 场景步骤二（用户本地）
 
+1. 用户运行【生成机器码】的程序
+2. 生成放有【加密机器码】的文件
+3. 把【加密机器码】的文件提供给管理员
+
+
+```python
+from user import *
+
+u_machine_code = gen_machine_code()
+```
+
+### 场景步骤三（管理员本地）
+
+1. 管理员解密用户提供的【加密机器码】文件
+2. 同时为用户分配【随机用户码】文件
+3. 结合两者生成【注册码】文件
+4. 把【随机用户码】文件和【注册码】文件提供给用户
+
+```python
+from admin import *
+
+a_machine_code = read_machine_code()
+a_user_code = gen_user_code()
+a_register_code = gen_register_code(
+    a_machine_code, a_user_code
+)
+```
+
+
+### 场景步骤四（用户本地）
+
+1. 用户运行应用主程序
+2. 主程序读取【用户码】文件（或让用户输入用户码）
+3. 主程序在用户本地重新生成【机器码】
+4. 主程序利用【用户码】和【机器码】生成【注册码】
+5. 主程序比对【生成的注册码】和【管理员提供的注册码】内容是否一致
+6. 若一致，程序运行；否则，程序终止
+
+```python
+from user import *
+
+u_user_code = read_user_code()
+rst = verify_authorization(u_user_code)
+if rst == True :
+    app.run()
+else :
+    exit(1)
+```
 
 
 ## 开发者说明
@@ -52,10 +105,10 @@ TODO
 python setup.py sdist
 
 # 本地安装（测试用）
-pip install .\dist\xxxx-?.?.?.tar.gz
+pip install .\dist\py-gen-mur-?.?.?.tar.gz
 
 # 本地卸载
-pip uninstall xxxx
+pip uninstall py-gen-mur
 ```
 
 ### 手动发布项目

@@ -7,6 +7,14 @@ import string
 from ._public import *
 
 
+def read_machine_code() :
+    '''
+    管理员场景： 读取用户提供的机器码
+    [return] 机器码
+    '''
+    return read(MACHINE_CODE_PATH)
+
+
 def gen_user_code(bit=8, to_file=True) :
     '''
     管理员场景： 随机分配用户码，并写入文件

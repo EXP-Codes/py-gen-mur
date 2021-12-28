@@ -92,7 +92,7 @@ class TestScenes(unittest.TestCase):
     def test_verify_authorization(self) :
         #--------------------
         # 用户本地执行：
-        u_machine_code = gen_machine_code() # 用户生成加密的机器码
+        u_machine_code = gen_machine_code()     # 用户生成加密的机器码（会生成文件）
 
         #--------------------
         # 用户提供机器码给管理员（移交文件即可）
@@ -100,8 +100,9 @@ class TestScenes(unittest.TestCase):
 
         #--------------------
         # 管理员本地执行：
-        a_user_code = gen_user_code()           # 管理员随机分配的用户码
-        a_register_code = gen_register_code(    # 管理员为用户生成的注册码
+        a_machine_code = read_machine_code()    # 管理员读取用户提供的机器码文件
+        a_user_code = gen_user_code()           # 管理员随机分配的用户码（会生成文件）
+        a_register_code = gen_register_code(    # 管理员为用户生成的注册码（会生成文件）
             a_machine_code, a_user_code
         )
 
@@ -113,13 +114,17 @@ class TestScenes(unittest.TestCase):
 
         #--------------------
         # 用户本地执行：
-        #   1. 读取 或 让用户输入 用户码
+        #   1. 读取用户码文件 或 让用户输入用户码
         u_user_code = read_user_code()   # options
         #   2. 在用户本地重新生成机器码
         #   3. 利用 用户码 和 机器码 生成 注册码
         #   4. 比对 生成的注册码 和 用户放到本地的注册码文件内容 是否一致
         rst = verify_authorization(u_user_code)
         self.assertTrue(rst)
+
+    
+    def test(self) :
+        
 
 
 
