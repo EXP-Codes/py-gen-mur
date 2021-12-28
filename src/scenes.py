@@ -11,6 +11,11 @@ from ._mi import MachineInfo
 MACHINE_CODE_PATH = './.machine'
 USER_CODE_PATH = './.user'
 REGISTER_CODE_PATH = './.register'
+CODE_PATHS = [ 
+    MACHINE_CODE_PATH, 
+    USER_CODE_PATH, 
+    REGISTER_CODE_PATH 
+]
 
 
 # 因代码开源，不建议 Crypt 使用默认类。建议使用此工具时，自定义指定 Crypt 构造函数的 key 和 iv
@@ -52,6 +57,18 @@ def gen_user_code(bit=8, to_file=True) :
     )
     if to_file :
         _save(user_code, USER_CODE_PATH)
+    return user_code
+
+
+def read_user_code(input_tips='Please Input User Code: ') :
+    '''
+    用户场景： 读取（或输入）被管理员分配的用户码
+    [param] input_tips: 输入提示
+    [return] 用户码
+    '''
+    user_code = _read(USER_CODE_PATH)   # 若无法从文件中读取
+    if user_code == '' :
+        user_code = input(input_tips)   # 则要求用户输入
     return user_code
 
 

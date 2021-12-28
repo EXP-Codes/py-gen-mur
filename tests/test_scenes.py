@@ -25,7 +25,9 @@ class TestScenes(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) :
-        pass
+        for path in CODE_PATHS :
+            if os.path.exists(path) :
+                os.remove(path)
 
 
     def setUp(self) :
@@ -67,7 +69,7 @@ class TestScenes(unittest.TestCase):
             len(user_code), 
             BIT
         )
-    
+
 
     def test_gen_register_code(self) :
         my_key = gen_des_key()  # 注意自行生成的 key 需要保存好
@@ -87,27 +89,36 @@ class TestScenes(unittest.TestCase):
 
 
     def test_verify_authorization(self) :
-        user_code = "U32zH48k"              # 用户预先指定 或 管理员随机分配 的用户码
-        machine_code = gen_machine_code()   # 用户提供的机器码（这行代码在用户本地执行）
-        gen_register_code(machine_code, user_code)  # 管理员为用户生成的注册码（这行代码在管理员本地执行）
+        #--------------------
+        # 用户本地执行：
+        u_machine_code = gen_machine_code() # 用户生成加密的机器码
 
-        # ...
-        # 用户把管理员提供的注册码，放到本地指定位置的文件
-        # ...
+        #--------------------
+        # 用户提供机器码给管理员（移交文件即可）
+        a_machine_code = u_machine_code
 
-        # 这行代码在用户本地执行，主要做三件事：
-        #   1. 接受用户输入的 用户码
+        #--------------------
+        # 管理员本地执行：
+        a_user_code = gen_user_code()           # 管理员随机分配的用户码
+        a_register_code = gen_register_code(    # 管理员为用户生成的注册码
+            a_machine_code, a_user_code
+        )
+
+        #--------------------
+        # 管理员提供用户码给用户（移交文件 或 让用户输入 均可）
+        # 管理员提供注册码给用户（移交文件即可）
+        u_user_code = a_user_code   # options
+        u_register_code = a_register_code
+
+        #--------------------
+        # 用户本地执行：
+        #   1. 读取 或 让用户输入 用户码
+        u_user_code = read_user_code()   # options
         #   2. 在用户本地重新生成机器码
         #   3. 利用 用户码 和 机器码 生成 注册码
         #   4. 比对 生成的注册码 和 用户放到本地的注册码文件内容 是否一致
-        rst = verify_authorization(user_code)
+        rst = verify_authorization(u_user_code)
         self.assertTrue(rst)
-
-
-
-
-
-
 
 
 
