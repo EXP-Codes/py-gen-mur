@@ -3,7 +3,7 @@
 # -----------------------------------------------
 
 import os
-from ._crypt import Crypt
+from .crypt import Crypt
 from ._mi import MachineInfo
 
 # 因代码开源，不建议 Crypt 使用默认类。建议使用此工具时，自定义指定 Crypt 构造函数的 key 和 iv
