@@ -7,6 +7,7 @@ import win32api
 import psutil
 from datetime import datetime
 
+
 class MachineInfo :
 
     def __init__(self) -> None:
