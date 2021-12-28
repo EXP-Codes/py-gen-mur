@@ -14,7 +14,7 @@
 
 ## 使用场景说明
 
-> 详见 [测试用例](./tests/test.py)
+> 使用场景详见 [测试用例](./tests/test.py) 。
 
 
 ### 场景步骤一（管理员本地，可选）
@@ -48,7 +48,7 @@ my_crypt = Crypt(
 ```python
 from user import *
 
-u_machine_code = gen_machine_code()
+u_machine_code = gen_machine_code(my_crypt)
 ```
 
 ### 场景步骤三（管理员本地）
@@ -64,7 +64,7 @@ from admin import *
 a_machine_code = read_machine_code()
 a_user_code = gen_user_code()
 a_register_code = gen_register_code(
-    a_machine_code, a_user_code
+    a_machine_code, a_user_code, my_crypt
 )
 ```
 
@@ -82,7 +82,7 @@ a_register_code = gen_register_code(
 from user import *
 
 u_user_code = read_user_code()
-rst = verify_authorization(u_user_code)
+rst = verify_authorization(u_user_code, my_crypt)
 if rst == True :
     app.run()
 else :
