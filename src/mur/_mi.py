@@ -3,7 +3,6 @@
 # -----------------------------------------------
 
 import platform
-import win32api
 from psutil import net_if_addrs
 from datetime import datetime
 
@@ -11,7 +10,8 @@ from datetime import datetime
 class MachineInfo :
 
     def __init__(self) -> None:
-        pass
+        if self._is_windows() :
+            import win32api
 
 
     def generate(self) :
@@ -82,10 +82,11 @@ class MachineInfo :
         for k, v in net_if_addrs().items():
             for item in v:
                 address = item[1]
-                if '-' in address and len(address) == 17:
+                if len(address) != 17 :
+                    continue
+                if ('-' in address) or (':' in address) :
                     macs.append(address)
         return ';'.join(macs)
-    
 
 
     def _os(self) :

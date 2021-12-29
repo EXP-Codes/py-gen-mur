@@ -9,8 +9,6 @@
 
 ![](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)
 
-> 因内含 win32api 依赖包，该包在 Linux 环境下安装会报错，不必理会，不影响使用
-
 
 ## 使用场景说明
 
