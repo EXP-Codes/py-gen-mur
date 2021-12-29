@@ -30,4 +30,5 @@ tests/db/mysql/data
 .machine
 .user
 .register
-
+.des_key
+.des_iv

@@ -59,6 +59,9 @@ from mur.user import *
 u_machine_code = gen_machine_code(my_crypt)
 ```
 
+> 实际使用时可复制 [`gen_register_code.py`](./gen_register_code.py) 到需要发布的程序，由用户生成【机器码】
+
+
 ### 场景步骤三（管理员本地）
 
 1. 管理员解密用户提供的【加密机器码】文件
@@ -75,6 +78,8 @@ a_register_code = gen_register_code(
     a_machine_code, a_user_code, my_crypt
 )
 ```
+
+> 实际使用时可在本仓库中执行 [`python gen_register_code.py`](./gen_register_code.py) 为用户生成【用户码】和【注册码】
 
 
 ### 场景步骤四（用户本地）

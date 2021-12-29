@@ -54,6 +54,7 @@ def gen_register_code(machine_code, user_code, crypt=CRYPT, to_file=True) :
         register_code = gen_rc(crypt, uuid, user_code)
     except :
         register_code = ''
+        print('无法解密【机器码】：加密密钥不同、或加密格式不正确')
     if to_file :
         save(register_code, REGISTER_CODE_PATH)
     return register_code

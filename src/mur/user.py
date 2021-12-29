@@ -32,7 +32,7 @@ def read_user_code(tips='请输入用户码: ') :
     return user_code
 
 
-def verify_authorization(user_code, crypt=CRYPT, tips='注册码错误或不存在，请联系管理员。') :
+def verify_authorization(user_code, crypt=CRYPT, tips='用户码错误 或 注册码不存在，请联系管理员。程序终止。') :
     '''
     用户场景： 每次运行程序时，
         1. 输入用户码 
