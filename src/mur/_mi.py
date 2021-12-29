@@ -10,8 +10,7 @@ from datetime import datetime
 class MachineInfo :
 
     def __init__(self) -> None:
-        if self._is_windows() :
-            import win32api
+        pass
 
 
     def generate(self) :
@@ -49,6 +48,7 @@ class MachineInfo :
                     long - Sys Flags - other flags specific to the file system. See the api for details.
                     string - File System Name
         '''
+        import win32api
         disk_infos = win32api.GetVolumeInformation("C:\\")
         s_disk_infos = list(map(lambda e: str(e), disk_infos))
         return ';'.join(s_disk_infos[1:])   # 排除最容易修改的分卷名，其他参数除非格盘或重装系统，否则难以改变
