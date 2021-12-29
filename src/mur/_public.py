@@ -9,9 +9,9 @@ from ._mi import MachineInfo
 CRYPT = Crypt()     
 MI = MachineInfo()
 
-MACHINE_CODE_PATH = './.machine'
-USER_CODE_PATH = './.user'
-REGISTER_CODE_PATH = './.register'
+MACHINE_CODE_PATH = '.machine'
+USER_CODE_PATH = '.user'
+REGISTER_CODE_PATH = '.register'
 CODE_PATHS = [ 
     MACHINE_CODE_PATH, 
     USER_CODE_PATH, 

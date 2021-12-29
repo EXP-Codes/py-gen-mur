@@ -20,19 +20,19 @@ def gen_machine_code(crypt=CRYPT, to_file=True) :
     return machine_code
 
 
-def read_user_code(input_tips='Please Input User Code: ') :
+def read_user_code(tips='请输入用户码: ') :
     '''
     用户场景： 读取（或输入）被管理员分配的用户码
-    [param] input_tips: 输入提示
+    [param] tips: 输入提示
     [return] 用户码
     '''
     user_code = read(USER_CODE_PATH)   # 若无法从文件中读取
     if user_code == '' :
-        user_code = input(input_tips)   # 则要求用户输入
+        user_code = input(tips)   # 则要求用户输入
     return user_code
 
 
-def verify_authorization(user_code, crypt=CRYPT) :
+def verify_authorization(user_code, crypt=CRYPT, tips='注册码错误或不存在，请联系管理员。') :
     '''
     用户场景： 每次运行程序时，
         1. 输入用户码 
@@ -42,8 +42,12 @@ def verify_authorization(user_code, crypt=CRYPT) :
         5. 比较两个注册码是否相同
     [param] user_code: 用户码
     [param] crypt: 加解密类
+    [param] tips: 错误提示
     [return] true: 注册码一致； false: 注册码不同
     '''
     uuid = MI.generate()
     register_code = gen_rc(crypt, uuid, user_code)
-    return register_code == read(REGISTER_CODE_PATH)
+    rst = (register_code == read(REGISTER_CODE_PATH))
+    if not rst :
+        print(tips)
+    return rst
