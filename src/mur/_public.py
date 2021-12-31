@@ -3,6 +3,7 @@
 # -----------------------------------------------
 
 import os
+import time
 from .crypt import Crypt
 from ._mi import MachineInfo
 
@@ -32,6 +33,16 @@ def gen_rc(crypt, uuid, user_code) :
             "%s##%s" % (user_code, uuid)
         )
     )
+
+
+def after(days) :
+    '''
+    获取今天之后的 n 天
+    [param] days: 之后的 n 天
+    [return] n 天后的 long 时间戳
+    '''
+    days = 0 if days <= 0 else days
+    seconds = days * 86400
 
 
 def save(code, filepath) :

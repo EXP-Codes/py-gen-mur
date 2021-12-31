@@ -15,11 +15,11 @@ def read_machine_code() :
     return read(MACHINE_CODE_PATH)
 
 
-def gen_user_code(bit=8, to_file=True) :
+def gen_user_code(days=30, to_file=True) :
     '''
     管理员场景： 随机分配用户码，并写入文件
     （可直接把文件发送给用户，让其放到程序根目录）
-    [param] bit: 用户码位数
+    [param] day: 授权天数。 0 为永久授权
     [param] to_file: 是否把用户码写入文件
     [return] 用户码
     '''
@@ -28,7 +28,7 @@ def gen_user_code(bit=8, to_file=True) :
         string.digits
     )
     user_code = ''.join(
-        random.sample(str_range, bit)
+        random.sample(str_range, 8)
     )
     if to_file :
         save(user_code, USER_CODE_PATH)
