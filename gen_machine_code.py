@@ -19,6 +19,10 @@ def main() :
     print('已生成机器码 [%s]' % machine_code)
     print('已生成机器码对应的本地文件 [%s]' % MACHINE_CODE_PATH)
     print('请将其发送给管理员，以获取注册码。')
+    print('')
+    print('')
+    input('输入回车退出 ...')
+
 
 
 if __name__ == '__main__':

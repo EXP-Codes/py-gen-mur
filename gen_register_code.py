@@ -23,7 +23,8 @@ def main() :
         des_iv = read_des_iv()
         crypt = Crypt(des_key, des_iv)
 
-        user_code = gen_user_code()
+        days = input('请输入授权天数：')
+        user_code = gen_user_code(days, crypt)
         print('随机分配的【用户码】为 [%s]' % user_code)
         print('已把【用户码】保存到根目录的文件 [%s]，请把该文件发送给用户' % USER_CODE_PATH)
 

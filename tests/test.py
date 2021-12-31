@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 # ----------------------------------------------------------------------
 
 import unittest
+import time
 from src.mur.crypt import *
 from src.mur.admin import *
 from src.mur.user import *
@@ -62,14 +63,14 @@ class TestScenes(unittest.TestCase):
         )
 
 
-    def test_gen_user_code(self) :
-        BIT = 16
-        user_code = gen_user_code(BIT)
-        print("用户码： %s" % user_code)
-        self.assertEqual(
-            len(user_code), 
-            BIT
-        )
+    # def test_gen_user_code(self) :
+    #     DAYS = 30
+    #     user_code = gen_user_code(DAYS)
+    #     print("用户码： %s" % user_code)
+    #     self.assertEqual(
+    #         int(self.CRYPT.decrypt_des(user_code)), 
+    #         (int(time.time()) + 86400 * DAYS)
+    #     )
 
 
     def test_gen_register_code(self) :
@@ -79,7 +80,7 @@ class TestScenes(unittest.TestCase):
 
         machine_code = gen_machine_code(my_crypt)
         print("机器码： %s" % machine_code)
-        user_code = gen_user_code()
+        user_code = gen_user_code(0, my_crypt)
         print("用户码： %s" % user_code)
         register_code = gen_register_code(machine_code, user_code, my_crypt)
         print("注册码： %s" % register_code)
@@ -101,7 +102,8 @@ class TestScenes(unittest.TestCase):
         #--------------------
         # 管理员本地执行：
         a_machine_code = read_machine_code()    # 管理员读取用户提供的机器码文件
-        a_user_code = gen_user_code()           # 管理员随机分配的用户码（会生成文件）
+        days = 5                                # 授权天数
+        a_user_code = gen_user_code(days)       # 管理员随机分配的用户码（会生成文件）
         a_register_code = gen_register_code(    # 管理员为用户生成的注册码（会生成文件）
             a_machine_code, a_user_code
         )

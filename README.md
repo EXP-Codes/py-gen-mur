@@ -65,15 +65,16 @@ u_machine_code = gen_machine_code(my_crypt)
 ### 场景步骤三（管理员本地）
 
 1. 管理员解密用户提供的【加密机器码】文件
-2. 同时为用户分配【随机用户码】文件
+2. 同时为用户设置授权天数，生成【用户码】文件
 3. 结合两者生成【注册码】文件
-4. 把【随机用户码】文件和【注册码】文件提供给用户
+4. 把【用户码】文件和【注册码】文件提供给用户
 
 ```python
 from mur.admin import *
 
 a_machine_code = read_machine_code()
-a_user_code = gen_user_code()
+days = input('请输入授权天数：')    # 0 表示永久
+a_user_code = gen_user_code(days, crypt)
 a_register_code = gen_register_code(
     a_machine_code, a_user_code, my_crypt
 )
@@ -89,7 +90,7 @@ a_register_code = gen_register_code(
 3. 主程序在用户本地重新生成【机器码】
 4. 主程序利用【用户码】和【机器码】生成【注册码】
 5. 主程序比对【生成的注册码】和【管理员提供的注册码】内容是否一致
-6. 若一致，程序运行；否则，程序终止
+6. 若一致，且授权未过期，程序运行；否则，程序终止
 
 ```python
 from mur.user import *
