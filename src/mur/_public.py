@@ -6,7 +6,6 @@ import os
 import time
 import requests
 import json
-from requests.api import put
 from .crypt import Crypt
 from ._mi import MachineInfo
 
@@ -98,9 +97,7 @@ def read(filepath) :
     # 若当前目录读取不到，则试图从上级目录读取
     # 用于使用 pyinstaller 发布后，需要创建“快捷方式”或“软链”到上层目录的场景
     else :
-        filename = os.path.basename(filepath)
-        parent_dir = os.path.dirname(os.path.abspath(filepath))
-        parent_filepath = "%s/%s" % (parent_dir, filename)
+        parent_filepath = "../%s" % os.path.basename(filepath)
         if os.path.exists(parent_filepath) :
             with open(parent_filepath, 'r') as file :
                 code = file.read()
