@@ -10,6 +10,7 @@ from ._mi import MachineInfo
 CRYPT = Crypt()     
 MI = MachineInfo()
 
+JOINER = '##'
 MACHINE_CODE_PATH = '.machine'
 USER_CODE_PATH = '.user'
 REGISTER_CODE_PATH = '.register'
@@ -30,19 +31,21 @@ def gen_rc(crypt, uuid, user_code) :
     '''
     return crypt.to_md5(
         crypt.encrypt_des(
-            "%s##%s" % (user_code, uuid)
+            "%s%s%s" % (user_code, JOINER, uuid)
         )
     )
 
 
 def after(days) :
     '''
-    获取今天之后的 n 天
+    获取今天之后的 n 天的时间点（精确到秒）
     [param] days: 之后的 n 天
     [return] n 天后的 long 时间戳
     '''
     days = 0 if days <= 0 else days
     seconds = days * 86400
+    now = time.time()
+    return now + seconds
 
 
 def save(code, filepath) :
