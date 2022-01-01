@@ -43,21 +43,25 @@ def verify_authorization(user_code, crypt=CRYPT) :
     [param] crypt: 加解密类
     [return] true: 注册码一致； false: 注册码不同
     '''
-    uuid = MI.generate()
-    expire_time = crypt.decrypt_des(user_code)
-    register_code = gen_rc(crypt, uuid, expire_time)
-    rst = (register_code == read(REGISTER_CODE_PATH))
-    if rst :
-        expire_time = int(expire_time)
-        expire_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(expire_time))
-        if expire_time == 0 :
-            print('注册码正确（永久）。')
+    rst = False
+    try :
+        uuid = MI.generate()
+        expire_time = crypt.decrypt_des(user_code)
+        register_code = gen_rc(crypt, uuid, expire_time)
+        rst = (register_code == read(REGISTER_CODE_PATH))
+        if rst :
+            expire_time = int(expire_time)
+            expire_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(expire_time))
+            if expire_time == 0 :
+                print('注册码正确（永久）。')
 
-        elif now() <= expire_time :
-            print('注册码正确（有效期至 %s）。' % expire_date)
-        else :
-            rst = False
-            print('注册码已过期（有效期至 %s）。' % expire_date)
-    else :
+            elif now() <= expire_time :
+                print('注册码正确（有效期至 %s）。' % expire_date)
+            else :
+                rst = False
+                print('注册码已过期（有效期至 %s）。' % expire_date)
+    except :
+        pass
+    if not rst :
         print('用户码错误 或 注册码不存在，请联系管理员。')
     return rst
