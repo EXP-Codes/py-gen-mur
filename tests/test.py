@@ -63,6 +63,7 @@ class TestScenes(unittest.TestCase):
         )
 
 
+    # 当前为在线获取时间，因网络延时问题，测试断言无法通过
     # def test_gen_user_code(self) :
     #     DAYS = 30
     #     user_code = gen_user_code(DAYS)
