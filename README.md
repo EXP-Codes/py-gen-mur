@@ -10,21 +10,6 @@
 ![](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)
 
 
-## 使用注意
-
-凡是使用了此工具的程序，在发布该程序时，建议不要直接用 `Pyinstaller` 打包成 `*.pyc`，然后供用户使用，否则很容易被反编译破解。
-
-建议先对源码做加密处理，有两个方法，任选一个即可：
-
-1. 使用 `Pyinstaller` 打包时增加 `--key ${password}` 参数，对源码加密，得到 `*.pyc.encrypted` 后才提供给用户使用。
-
-> 可参考文档《[Pyinstaller 打包的 exe 之一键反编译 py 脚本与防反编译](https://blog.csdn.net/as604049322/article/details/119834495?share_token=a97db520-65be-4a54-b9cf-0a452163fb9d)》
-
-2. 先使用 `Cython` 生成 `*.py` 的动态连接 `*.pyd` 文件，再使用 `Pyinstaller` 打包，才供用户使用。
-
-> 可参考文档《[Cython + Pyinstaller 防止反编译打包](https://www.jianshu.com/p/4a0be62ee3e2?share_token=64cb40ef-ad3b-4f2e-abd6-3bf95af210b6)》
-
-
 ## 使用场景说明
 
 > 使用场景详见 [测试用例](./tests/test.py) 。
@@ -107,6 +92,32 @@ if rst == True :
 else :
     exit(1)
 ```
+
+
+## 使用注意
+
+凡是使用了此工具的程序，在发布该程序时，建议不要直接用 `Pyinstaller` 打包成 `*.pyc`，然后供用户使用，否则很容易被反编译破解。
+
+建议先对源码做加密处理，再提供给用户使用。有两个方法，任选一个即可：
+
+### Cython 编译为动态链接
+
+1. 先使用 `Cython` 生成 `*.py` 的动态连接 `*.pyd` 文件
+2. 再使用 `Pyinstaller` 打包，才供用户使用。
+
+> 可参考文档《[Cython + Pyinstaller 防止反编译打包](https://www.jianshu.com/p/4a0be62ee3e2?share_token=64cb40ef-ad3b-4f2e-abd6-3bf95af210b6)》
+
+
+### Pyinstaller 加密
+
+1. 先用 pip 命令安装 `tinyaes` 和 `pycrypto` （需要提前安装 Microsoft Visual Studio 和设置环境变量 CL）
+2. 使用 `Pyinstaller` 打包时增加 `--key ${password}` （此时编译的中间文件为 `*.pyc.encrypted`）。
+
+可参考文档：
+
+- 《[Pyinstaller 打包的 exe 之一键反编译 py 脚本与防反编译](https://blog.csdn.net/as604049322/article/details/119834495?share_token=a97db520-65be-4a54-b9cf-0a452163fb9d)》
+- 《[谈谈 Pyinstaller 的编译和反编译，如何保护你的代码](https://chengxuyuanwenku.tumblr.com/post/611434747121549312/%E8%B0%88%E8%B0%88-pyinstaller-%E7%9A%84%E7%BC%96%E8%AF%91%E5%92%8C%E5%8F%8D%E7%BC%96%E8%AF%91%E5%A6%82%E4%BD%95%E4%BF%9D%E6%8A%A4%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81)》
+- 《[Microsoft Windows Python-3.6 PyCrypto installation error](https://stackoverflow.com/questions/41843266/microsoft-windows-python-3-6-pycrypto-installation-error/46921479#46921479)》
 
 
 ## 赞助途径
