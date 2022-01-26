@@ -49,7 +49,7 @@ from mur.user import *
 u_machine_code = gen_machine_code(my_crypt)
 ```
 
-> 实际使用时可复制 [`gen_register_code.py`](./gen_register_code.py) 到需要发布的程序，由用户执行生成【机器码】
+> 实际使用时可复制 [`gen_machine_code.py`](./gen_machine_code.py) 到需要发布的程序，由用户执行生成【机器码】
 
 
 ### 场景步骤三（管理员本地）
