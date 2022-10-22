@@ -1,9 +1,21 @@
 name: Auto Build And Release To PyPI
 
 on:
-  push:
-    branches:
-      - master
+  # 手动触发构建
+  workflow_dispatch:
+
+  # （从版本分支）创建 release 的时候触发 （release 版）
+  release:
+    types: [published]
+
+  # 把特性分支合并到 v* 版本分支时触发 （snapshot 版）
+  pull_request:
+    branches: [v*]
+
+  # 推送特性分支时触发 （snapshot 版）
+#  push:
+#    branches: [feature-*]
+
 
 jobs:
   build-and-publish:
