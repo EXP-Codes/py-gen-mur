@@ -10,6 +10,16 @@
 ![](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)
 
 
+## 安装说明
+
+执行脚本： 
+
+```
+python -m pip install --upgrade pip
+python -m pip install py-gen-mur
+```
+
+
 ## 使用场景说明
 
 > 使用场景详见 [测试用例](./tests/test.py) 。

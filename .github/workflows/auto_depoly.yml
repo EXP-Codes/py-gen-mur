@@ -9,12 +9,12 @@ on:
     types: [published]
 
   # 把特性分支合并到 v* 版本分支时触发 （snapshot 版）
-  pull_request:
-    branches: [v*]
+  # pull_request:
+  #   branches: [v*]
 
   # 推送特性分支时触发 （snapshot 版）
-#  push:
-#    branches: [feature-*]
+  # push:
+  #   branches: [feature-*]
 
 
 jobs:
